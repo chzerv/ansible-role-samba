@@ -2,10 +2,22 @@
 dependency:
   name: galaxy
 driver:
-  name: delegated
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
 platforms:
   - name: instance
+    image: "chzerv/${IMAGE:-fedora34}-systemd-ansible:${TAG:-latest}"
+    command: ${DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
 provisioner:
   name: ansible
+  playbooks:
+    converge: "${MOLECULE_PLAYBOOK:-converge.yml}"
 verifier:
   name: ansible
