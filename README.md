@@ -53,7 +53,7 @@ Role Variables
 + `samba_guest_account`: The user account to be used for guest users. Note that this user has to already exist.
 + `samba_username_map_file`: Specify a file which contains username mappings. Commonly used to map Windows user names to Unix users.
 
-+ `samba_shares_root`: The root directory under which shares will be created.
++ `samba_shares_root_directory`: The root directory under which shares will be created.
 + `samba_shares_config_file`: The file where the configuration of shares will be stored into.
 + `samba_homes_accessible`: Whether to make user homes accessible or not. Defaults to `false`.
 + `samba_shares`: A list containing share definitions. To define a share, you must at least provide a name for it. The following options are available when defining shares:

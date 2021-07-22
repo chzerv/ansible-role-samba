@@ -26,4 +26,4 @@ samba_username_map_file: []
 # Share configuration
 samba_shares_config_file: /etc/samba/shares.conf
 samba_homes_accessible: false
-samba_shares_root: /srv
+samba_shares_root_directory: /srv
