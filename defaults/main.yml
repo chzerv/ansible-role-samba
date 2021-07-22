@@ -25,6 +25,11 @@ samba_passdb_backend: "tdbsam"
 samba_map_to_guest: "never"
 samba_guest_account: []
 samba_username_map_file: []
+samba_username_map_entries: []
+# samba_username_map_entries:
+#   - to: root
+#     from: admin administrator
+
 
 # Share configuration
 samba_shares_config_file: /etc/samba/shares.conf

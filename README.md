@@ -17,6 +17,7 @@ Role Variables
     - username: john
       password: amazing_password
   ```
+
 + `samba_workgroup`: The workgroup which is -or will be- used in your network.
 + `samba_server_string`: A description for the server. Can be anything you like.
 + `samba_server_role`: Defines in which mode Samba will operate. Possible values are:
@@ -57,7 +58,14 @@ Role Variables
   - `Bad Password`: Logins with an invalid password will be treated as guest logins, and `samba_guest_account` will be used as the default account. 
   - `Bad Uid`: Only applicable when Samba is configured in some type of domain mode security. Logins that are successfully authenticated by the domain but have no valid Unix user account are treated like guest logins.
 + `samba_guest_account`: The user account to be used for guest users. Note that this user has to already exist.
-+ `samba_username_map_file`: Specify a file which contains username mappings. Commonly used to map Windows user names to Unix users.
++ `samba_username_map_file`: The file which will contain username mappings.
++ `samba_username_map_entries: Specify username mappings.`
+  For example, to map **from** the name *admin* or *administrator* **to** the name *root*:
+  ```yaml
+  samba_username_map_entries:
+    - to: root
+      from: admin administrator
+  ```
 
 + `samba_shares_root_directory`: The root directory under which shares will be created.
 + `samba_shares_config_file`: The file where the configuration of shares will be stored into.
