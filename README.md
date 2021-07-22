@@ -11,6 +11,12 @@ Requirements
 Role Variables
 --------------
 
++ `samba_users`: User(s) to be added as Samba users.
+  ```yaml
+  samba_users:
+    - username: john
+      password: amazing_password
+  ```
 + `samba_workgroup`: The workgroup which is -or will be- used in your network.
 + `samba_server_string`: A description for the server. Can be anything you like.
 + `samba_server_role`: Defines in which mode Samba will operate. Possible values are:

@@ -1,5 +1,8 @@
 ---
 samba_users: []
+# samba_users:
+#   - username: john
+#     password: amazing_password
 
 samba_workgroup: []
 samba_server_string: []
