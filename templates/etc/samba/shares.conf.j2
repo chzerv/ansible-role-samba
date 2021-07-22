@@ -1,0 +1,36 @@
+{% if samba_shares | length > 0%}
+{% for share in samba_shares %}
+[{{ share.name }}]
+{% if share.comment is defined %}
+  comment = {{ share.comment }}
+{% endif %}
+  path = {{ share.path | default([samba_shares_root,share.name] | join('/')) }}
+  public = {{ share.public | default('no') }}
+{% if share.valid_users is defined %}
+  valid users = {{ share.valid_users }}
+{% endif %}
+{% if share.group is defined %}
+  group = {{ share.group }}
+{% endif %}
+{% if share.write_list is defined %}
+  write list = {{ share.write_list }}
+{% endif %}
+{% if share.read_list is defined %}
+  read list = {{ share.read_list }}
+{% endif %}
+{% if share.browseable is defined %}
+  browseable = {{ share.browseable }}
+{% endif %}
+{% if share.read_only is defined %}
+  read only = {{ share.read_only }}
+{% endif %}
+{% if share.printable is defined %}
+  printable = {{ share.printable }}
+{% endif %}
+{% if samba_guest_only is defined %}
+  guest only = {{ samba.guest_only }}
+{% endif %}
+  create mask = {{ share.create_mask | default('0644') }}
+  directory mask = {{ share.directory_mask | default('0755') }}
+{% endfor %}
+{% endif %}

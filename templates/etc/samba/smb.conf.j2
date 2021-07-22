@@ -1,0 +1,77 @@
+#================ Global Settings ================#
+[global]
+{% if samba_workgroup | length > 0 %}
+   workgroup = {{ samba_workgroup }}
+{% else %}
+   workgroup = WORKGROUP
+{% endif %}
+{% if samba_server_string | length > 0 %}
+   server string = {{ samba_server_string }}
+{% else %}
+   server string = Samba Server
+{% endif %}
+{% if samba_server_role | length > 0 %}
+   server role = {{ samba_server_role }}
+{% else %}
+   server role = standalone server
+{% endif %}
+{% if samba_realm | length > 0 %}
+   realm = {{ samba_realm }}
+{% endif %}
+
+   #############
+   #  Logging  #
+   #############
+{% if samba_log_file | length > 0 %}
+   log file = {{ samba_log_file }}
+{% if samba_log_size is defined %}
+   max log size = {{ samba_log_size | default('50') }}
+{% endif %}
+{% if samba_log_level is defined %}
+   log level = {{ samba_log_level | default('2') }}
+{% endif %}
+{% else %}
+   logging = syslog
+{% endif %}
+
+   ##############################
+   #  Security & Authentication #
+   ##############################
+{% if samba_apply_cve_2017_7494_mitigations | bool and samba_version.stdout >= "3.5.0" and samba_version.stdout < "4.6.4" and ansible_selinux.status != "enabled" %}
+   nt pipe support = no
+{% endif %}
+{% if samba_hosts_allow | length > 0 %}
+   hosts allow = {{ samba_hosts_allow }}
+{% endif %}
+{% if samba_server_min_protocol | length > 0 %}
+   server min protocol = {{ samba_server_min_protocol }}
+{% endif %}
+{% if samba_server_max_protocol | length > 0 %}
+   server max protocol = {{ samba_server_max_protocol }}
+{% endif %}
+{% if samba_interfaces | length > 0 %}
+   interfaces = {{ samba_interfaces }}
+{% endif %}
+
+   security = {{ samba_security | default('user') }}
+   passdb backend = {{ samba_passdb_backend | default('tdbsam') }}
+{% if samba_map_to_guest | length > 0%}
+   map to guest = {{ samba_map_to_guest }}
+{% endif %}
+{% if samba_guest_account | length > 0 %}
+   guest account = {{ samba_guest_account }}
+{% endif %}
+{% if samba_username_map_file | length > 0 %}
+   username map = {{ samba_username_map_file }}
+{% endif %}
+
+#================ Share Definitions ================#
+
+{% if samba_homes_accessible | bool %}
+[homes]
+  comment = Home Directories
+  browseable = no
+  writable = yes
+{% endif %}
+
+include = /etc/samba/shares.conf
