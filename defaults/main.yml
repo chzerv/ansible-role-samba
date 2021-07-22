@@ -1,2 +1,29 @@
 ---
-# defaults file for ansible-role-samba
+samba_users: []
+
+samba_workgroup: []
+samba_server_string: []
+samba_server_role: []
+samba_realm: []
+
+# Logging
+samba_log_file: []
+samba_log_size: 50
+samba_log_level: 2
+
+# Security & Authentication
+samba_apply_cve_2017_7494_mitigations: true
+samba_hosts_allow: []
+samba_server_min_protocol: []
+samba_server_max_protocol: []
+samba_interfaces: []
+samba_security: "user"
+samba_passdb_backend: "tdbsam"
+samba_map_to_guest: "never"
+samba_guest_account: []
+samba_username_map_file: []
+
+# Share configuration
+samba_shares_config_file: /etc/samba/shares.conf
+samba_homes_accessible: false
+samba_shares_root: /srv
