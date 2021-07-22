@@ -1,2 +1,71 @@
 ---
-# tasks file for ansible-role-samba
+- name: Include distribution specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Ensure required packages are installed.
+  package:
+    name: "{{ samba_server_packages }}"
+    state: present
+
+- name: Register Samba package version.
+  shell:
+    cmd: smbd --version | sed 's/Version //'
+  register: samba_version
+  changed_when: false
+
+- name: Global configuration.
+  template:
+    src: smb.conf.j2
+    dest: "{{ samba_config_file }}"
+    validate: "testparm -s %s"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Share configuration.
+  template:
+    src: shares.conf.j2
+    dest: "{{ samba_shares_config_file }}"
+    validate: "testparm -s %s"
+    owner: root
+    group: root
+    mode: "0644"
+
+# https://stackoverflow.com/questions/44762488/non-interactive-samba-user-creation-via-ansible
+- name: Create Samba users, if they don't already exist.
+  shell: >
+    (pdbedit --user={{ item.username }} 2>&1 > /dev/null)
+    || (echo '{{ item.password }}'; echo '{{ item.password }}')
+    | smbpasswd -s -a {{ item.username }}
+  args:
+    executable: /bin/bash
+  register: user_created
+  changed_when: "'Added user' in user_created.stdout"
+  no_log: true # Don't log passwords!
+  with_items: "{{ samba_users }}"
+
+- name: Ensure the Samba shares root directory exists.
+  file:
+    path: "{{ samba_shares_root_directory }}"
+    owner: root
+    group: root
+    mode: "0755"
+    state: directory
+  when: samba_shares | length > 0
+
+- name: Ensure the actual share directory for each share exists.
+  file:
+    path: "{{ item.path | default([samba_shares_root_directory, item.name] | join('/')) }}"
+    owner: root
+    group: "{{ item.group | default('users') }}"
+    mode: "{{ item.directory_mask | default('0755') }}"
+    state: directory
+  with_items: "{{ samba_shares }}"
+  when: samba_shares | length > 0
+
+- name: Ensure samba service is started and enabled on boot.
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  with_items: "{{ samba_services }}"
