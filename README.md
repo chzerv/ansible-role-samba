@@ -5,7 +5,7 @@ This role installs and configures Samba (SMB) as a file server on Debian-based, 
 Requirements
 ------------
 
-+ A properly configured firewall. Samba requires ports 137-139 and 445 to be open.
++ A properly configured firewall. Samba requires ports `137-139` and `445` to be open.
 + The users specified as Samba users must already exist.
 
 Role Variables
@@ -198,7 +198,7 @@ samba_shares: []
 >
 > **Notes:**
 >
-> + Names starting with `@` are interpreted as UNIX groups.
+> + The `valid_users`, `write_list` and `read_list` variable support names starting with `@`, e.g., `@users`. These names are interpreted as UNIX groups.
 
 
 Dependencies
