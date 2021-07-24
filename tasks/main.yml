@@ -45,6 +45,7 @@
 # https://stackoverflow.com/questions/44762488/non-interactive-samba-user-creation-via-ansible
 - name: Create Samba users, if they don't already exist.
   shell: >
+    set -o pipefail &&
     (pdbedit --user={{ item.username }} 2>&1 > /dev/null)
     || (echo '{{ item.password }}'; echo '{{ item.password }}')
     | smbpasswd -s -a {{ item.username }}
