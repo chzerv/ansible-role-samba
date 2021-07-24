@@ -79,7 +79,7 @@
         success_msg: "The share directory exists!"
 
     - name: Check if the Samba user has been created.
-      command: "pdbedit -L testUser"
+      command: "pdbedit -L sambauser"
       changed_when: false
       register: user_exists
 
