@@ -1,0 +1,47 @@
+---
+name: Test.
+"on":
+  pull_request:
+  push:
+    paths-ignore:
+      - "README.md"
+
+jobs:
+  test:
+    name: Molecule test.
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config:
+          - image: "debian10"
+          - image: "debian9"
+          - image: "ubuntu2010"
+          - image: "ubuntu2004"
+          - image: "ubuntu1804"
+          - image: "centos8"
+          - image: "centos7"
+          - image: "fedora34"
+          - image: "fedora33"
+          - image: "fedora32"
+          - image: "archlinux"
+
+    steps:
+      - name: Checkout.
+        uses: actions/checkout@v2
+
+      - name: Set up python3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install test dependencies.
+        run: |
+          pip3 install docker ansible yamllint ansible-lint molecule molecule-docker
+
+      - name: Run molecule test
+        run: molecule test
+        env:
+          PY_COLORS: "1"
+          ANSIBLE_FORCE_COLOR: "1"
+          IMAGE: ${{ matrix.config.image }}
+          TAG: latest
