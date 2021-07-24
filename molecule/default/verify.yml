@@ -1,0 +1,90 @@
+---
+- name: Verify
+  hosts: all
+
+  tasks:
+    - name: Include distribution specific variables.
+      include_vars: "../../vars/{{ ansible_os_family }}.yml"
+
+    - name: Gather service facts.
+      service_facts:
+      register: service_state
+
+    - name: Assert that the necessary services are started.
+      assert:
+        that: ansible_facts.services['{{ item }}.service'].state == "running"
+        fail_msg: "{{ item }} is NOT started"
+        success_msg: "{{ item }} is started!"
+      with_items: "{{ samba_services }}"
+
+    - name: Assert that the necessary services are enabled at boot.
+      assert:
+        that: ansible_facts.services['{{ item }}.service'].status == "enabled"
+        fail_msg: "{{ item }} is NOT enabled at boot!"
+        success_msg: "{{ item }} is enabled at boot!"
+      with_items: "{{ samba_services }}"
+
+    - name: Check if the main configuration file exists.
+      stat:
+        path: "{{ samba_config_file }}"
+      register: config_file
+
+    - name: Check if the share configuration file exists.
+      stat:
+        path: /etc/samba/shares.conf
+      register: share_file
+
+    - name: Check if the username map file exists.
+      stat:
+        path: /etc/samba/username_map
+      register: usermap_file
+
+    - name: Assert that the required configuration files are in place.
+      assert:
+        that:
+          - "{{ item }}.stat.exists == true"
+          - "{{ item }}.stat.exists == true"
+          - "{{ item }}.stat.exists == true"
+        fail_msg: "{{ item }} does NOT exist!"
+        success_msg: "{{ item }} exists!"
+      with_items:
+        - config_file
+        - share_file
+        - usermap_file
+
+    - name: Check if the root share directory exists.
+      stat:
+        path: /mnt/shares/
+      register: root_dir
+
+    - name: Assert that the root share directory exists.
+      assert:
+        that:
+          - root_dir.stat.exists == true
+          - root_dir.stat.isdir == true
+        fail_msg: "The root share directory does NOT exist!"
+        success_msg: "The root share directory exists!"
+
+    - name: Check if the actual share directory exists.
+      stat:
+        path: /mnt/shares/myShare
+      register: share_dir
+
+    - name: Assert that the actual share directory exists.
+      assert:
+        that:
+          - share_dir.stat.exists == true
+          - share_dir.stat.isdir == true
+        fail_msg: "The share directory does NOT exist!"
+        success_msg: "The share directory exists!"
+
+    - name: Check if the Samba user has been created.
+      command: "pdbedit -L testUser"
+      changed_when: false
+      register: user_exists
+
+    - name: Assert that the Samba user has been created.
+      assert:
+        that: not user_exists.stderr
+        fail_msg: "User has NOT been created!"
+        success_msg: "User has been created!"
