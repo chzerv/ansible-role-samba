@@ -54,7 +54,7 @@ samba_realm: []
 samba_log_file: []
 ```
 
-> The file where logs are saved. If left empty, logging will be done through `syslog`.
+> The file where logs will be saved to. If left empty, logging will be done through `syslog`.
 
 ```yaml
 samba_log_size: 50
@@ -72,7 +72,7 @@ samba_log_level: 2
 samba_apply_cve_2017_7494_mitigations: true
 ```
 
-> Whether to apply a workaround for [CVE-2017-7494](https://nvd.nist.gov/vuln/detail/CVE-2017-7494). If SELinux is enabled, there is no need for it. Otherwise, the `nt pipe support = no` option is used, which breaks browsing shares from Windows.
+> Apply workaround for [CVE-2017-7494](https://nvd.nist.gov/vuln/detail/CVE-2017-7494) when using Samba version >= 3.5 and before 4.6.4, 4.5.10 and 4.4.14. The workaround sets the `nt pipe support = no` option, which is known to break browsing shares from Windows. Note that if SELinux is enabled, there is no need for it
 
 ``` yaml
 samba_hosts_allow: []
@@ -97,7 +97,7 @@ samba_interfaces: []
 ```
 
 > A space separated list of additional interfaces to be used by Samba. If you have multiple network interfaces, they must be listed here. The interfaces can be given as:
->  - An IP/mask pair,
+> - An IP/mask pair,
 > - a broadcast/mask pair,
 > - an IP address or
 > - the interface's name (e.g., eth0)
@@ -116,8 +116,8 @@ samba_passdb_backend: tdbsam
 ```
 
 > Specifies the backend to be used for storing user information. Possible values are:
-> - `smbpasswd`: Information are stored in plaintext.
 > - `tdbsam` [**Default**]: TDP based password storage. One can also provide a path to where the file will be saved, e.g., `samba_passdb_backend: tdbsam:/etc/samba/passdb.tdb`
+> - `smbpasswd`: Information are stored in plaintext.
 > - `ldapsam`: LDAP based password storage. One can also provide an LDAP URL to connect to, like so:
 > `samba_passdb_backend: ldapsam:"ldap://ldap-1.example.com"`
   
@@ -143,15 +143,23 @@ samba_username_map_file: []
 
 > The file which will contain username mappings.
 
-``` yaml
+```yaml
 samba_username_map_entries: []
 ```
+
+> Specifies the actual username mappings.
+> For example, to map **from** the name *admin* or *administrator* **to** the name *root*:
+> ```yaml
+> samba_username_map_entries:
+>   - to: root
+>     from: admin administrator
+> ```
 
 ```yaml
 samba_multi_channel_support: false
 ```
 
-> Whether to enable SMB3 multi-channel support. This may improve performance, but can potentially result in data corruption. Use at your own risk!
+> Enable SMB3 multi-channel support. This may improve performance, but can potentially result in data corruption. Use at your own risk!
 
 ```yaml
 samba_deadtime: "20"
@@ -163,23 +171,13 @@ samba_deadtime: "20"
 samba_use_sendfile: true
 ```
 
-> Whether to use the more efficient `sendfile` system call or not. This has the potential of better utilizing the CPU, leading to better performance.
+> Use the more efficient `sendfile` system call or not. This has the potential of better utilizing the CPU, leading to better performance.
 
 ```yaml
 samba_async_read_write: true
 ```
 
 > Read and write files asynchronously.
-
-
-
-> Specifies the actual username mappings.
-> For example, to map **from** the name *admin* or *administrator* **to** the name *root*:
-> ```yaml
-> samba_username_map_entries:
->   - to: root
->     from: admin administrator
-> ```
 
 ``` yaml
 samba_shares_root_directory: /srv
@@ -197,7 +195,7 @@ samba_shares_config_file: /etc/samba/shares.conf
 samba_homes_accessible: false
 ```
 
-> Whether to make user homes accessible or not. Defaults to `false`.
+> Make user homes accessible. Defaults to `false`.
 
 ``` yaml
 samba_shares: []
