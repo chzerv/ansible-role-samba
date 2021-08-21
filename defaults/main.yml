@@ -9,12 +9,16 @@ samba_server_string: []
 samba_server_role: []
 samba_realm: []
 
-# Logging
+#############
+#  Logging  #
+#############
 samba_log_file: []
 samba_log_size: 50
 samba_log_level: 2
 
-# Security & Authentication
+###############################
+#  Security & Authentication  #
+###############################
 samba_apply_cve_2017_7494_mitigations: true
 samba_hosts_allow: []
 samba_server_min_protocol: []
@@ -30,6 +34,13 @@ samba_username_map_entries: []
 #   - to: root
 #     from: admin administrator
 
+#################
+#  Performance  #
+#################
+samba_multi_channel_support: false
+samba_deadtime: "30"
+samba_use_sendfile: true
+samba_async_read_write: true
 
 # Share configuration
 samba_shares_config_file: /etc/samba/shares.conf

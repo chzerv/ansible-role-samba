@@ -147,6 +147,32 @@ samba_username_map_file: []
 samba_username_map_entries: []
 ```
 
+```yaml
+samba_multi_channel_support: false
+```
+
+> Whether to enable SMB3 multi-channel support. This may improve performance, but can potentially result in data corruption. Use at your own risk!
+
+```yaml
+samba_deadtime: "20"
+```
+
+> The amount of *minutes* of inactivity before a connection is considered dead and is disconnected.
+
+```yaml
+samba_use_sendfile: true
+```
+
+> Whether to use the more efficient `sendfile` system call or not. This has the potential of better utilizing the CPU, leading to better performance.
+
+```yaml
+samba_async_read_write: true
+```
+
+> Read and write files asynchronously.
+
+
+
 > Specifies the actual username mappings.
 > For example, to map **from** the name *admin* or *administrator* **to** the name *root*:
 > ```yaml

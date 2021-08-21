@@ -65,6 +65,24 @@
    username map = {{ samba_username_map_file }}
 {% endif %}
 
+   #################
+   #  Performance  #
+   #################
+{% if samba_multi_channel_support | bool %}
+   server multi channel support = yes
+{% endif %}
+{% if samba_deadtime | length > 0 %}
+   deadtime = {{ samba_deadtime }}
+{% endif %}
+{% if samba_use_sendfile | bool %}
+   use sendfile = true
+{% endif %}
+{% if samba_async_read_write | bool %}
+   aio read size = 1
+   aio write size = 1
+{% endif %}
+
+
 #================ Share Definitions ================#
 
 {% if samba_homes_accessible | bool %}
