@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         config:
+          - image: "debian11"
           - image: "debian10"
           - image: "debian9"
           - image: "ubuntu2010"
@@ -22,7 +23,6 @@ jobs:
           - image: "centos7"
           - image: "fedora34"
           - image: "fedora33"
-          - image: "fedora32"
           - image: "archlinux"
 
     steps:
