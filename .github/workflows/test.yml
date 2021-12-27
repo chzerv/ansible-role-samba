@@ -16,7 +16,6 @@ jobs:
           - image: "debian11"
           - image: "debian10"
           - image: "debian9"
-          - image: "ubuntu2010"
           - image: "ubuntu2004"
           - image: "ubuntu1804"
           - image: "centos8"
